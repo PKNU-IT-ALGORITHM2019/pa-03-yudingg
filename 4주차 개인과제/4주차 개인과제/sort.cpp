@@ -22,9 +22,7 @@ double selectionSort(int data[], int n) {
 			if (max < data[j])
 				max = j;
 		}
-		int tmp = data[max];
-		data[max] = data[i];
-		data[i] = tmp;
+		swap(&data[max], &data[i]);
 	}
 	end = clock();
 
@@ -36,9 +34,7 @@ double bubbleSort(int data[], int n) {
 	for (int i = n; i > 1; i--) {
 		for (int j = 1; j < i; j++) {
 			if (data[j]>data[j + 1]) {
-				int tmp = data[j + 1];
-				data[j + 1] = data[j];
-				data[j] = tmp;
+				swap(&data[j + 1], &data[j]);
 			}
 		}
 	}
