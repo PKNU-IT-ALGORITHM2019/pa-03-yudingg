@@ -4,12 +4,12 @@
 #include <time.h>
 #include "sort.h"
 
-#define ONE 1000
-#define TWO 10000
-#define THREE 100000
+#define ONE 1001
+#define TWO 10001
+#define THREE 100001
 #define RANDOM 10
-#define TABLE 15
-#define SORT 7
+#define TABLE 16
+#define SORT 9
 #define CASE 6
 
 clock_t stt,ed;
@@ -18,9 +18,10 @@ int data[THREE];
 double table[TABLE][TABLE] = { 0 };
 
 void part(int n);
+int compare(const void *first, const void*second);
 int main() {
 
-	char *sortname[SORT] = { "Bubble","Selection","Insertion","Merge","Quick1","Quick2","Quick3" };
+	char *sortname[SORT] = { "Bubble","Selection","Insertion","Merge","Quick1","Quick2","Quick3","Heap","C_language_Sort" };
 	char *dataname[CASE] = { "Random1000","Reverse1000","Random10000","Reverse10000","Random100000","Reverse100000" };
 	
 	part(ONE);
@@ -30,7 +31,7 @@ int main() {
 	for (int i = 0; i < SORT; i++) {
 		for (int j = 0; j < CASE; j++) {
 			if (i == 0 && j == 0)
-				printf("               ");
+				printf("                ");
 			else if (j == 0) {
 				printf("%s", sortname[i]);
 				int length = strlen(sortname[i]);
@@ -44,7 +45,7 @@ int main() {
 					printf(" ");
 			}
 			else {
-				printf("       ");
+				printf("        ");
 				printf("%lf ", table[i][j] / 1000); 
 			}
 		}
@@ -53,18 +54,18 @@ int main() {
 
 }
 
+int test[THREE] = { 0 };
 void part(int n) {
 
-	int test[THREE];
 	double average[TABLE] = { 0 };
 	/*random part*/
 	srand((unsigned int)time(NULL));
 	for (int i = 0; i < RANDOM; i++) {
-		for (int i = 0; i < n; i++) {
+		for (int i = 1; i <= n; i++) {
 			data[i] = (rand() % n) + 1;
 		}
 		for (int j = 0; j < SORT; j++) {
-			for (int k = 0; k < n; k++) {
+			for (int k = 1; k <= n; k++) {
 				test[k] = data[k];
 			}
 			switch (j) {
@@ -73,25 +74,37 @@ void part(int n) {
 			case 2: average[j] += insertionSort(test, n); break;
 			case 3: 
 				stt = clock();
-				mergeSort(test, 0, n-1);
+				mergeSort(test, 0, n);
 				ed = clock();
 				average[j] += (double)ed - stt;
 				break;
 			case 4: 
 				stt = clock();
-				quickSort(test, 0, n-1, 1);
+				quickSort(test, 0, n, 1);
 				ed = clock();
 				average[j] += (double)ed - stt;
 				break;
 			case 5:
 				stt = clock();
-				quickSort(test, 0, n-1, 2);
+				quickSort(test, 0, n, 2);
 				ed = clock();
 				average[j] += (double)ed - stt;
 				break;
 			case 6:
 				stt = clock(); 
-				quickSort(test, 0, n-1, 3);
+				quickSort(test, 0, n, 3);
+				ed = clock();
+				average[j] += (double)ed - stt;
+				break;
+			case 7:
+				stt = clock();
+				heapSort(test, n);
+				ed = clock();
+				average[j] += (double)ed - stt;
+				break;
+			case 8:
+				stt = clock();
+				qsort(test, n, sizeof(int), compare);
 				ed = clock();
 				average[j] += (double)ed - stt;
 				break;
@@ -106,11 +119,11 @@ void part(int n) {
 	}
 
 	/*descending part*/
-	for (int i = 0; i < n; i++) {
-		data[i] = n - i;
+	for (int i = 1; i <= n; i++) {
+		data[i] = n-i;
 	}
 	for (int i = 0; i < SORT; i++) {
-		for (int j = 0; j < n; j++) {
+		for (int j = 1; j <= n; j++) {
 			test[j] = data[j];
 		}
 		switch (i) {
@@ -119,28 +132,48 @@ void part(int n) {
 		case 2: table[i][t + 1] = insertionSort(test, n); break;
 		case 3:
 			stt = clock();
-			mergeSort(test, 0, n-1);
+			mergeSort(test, 0, n);
 			ed = clock();
 			table[i][t + 1] = (double)(ed - stt);
 			break;
-		case 4:/*
-			stt = clock();
-			quickSort(test, 0, n-1, 1);
-			ed = clock();
-			table[i][t + 1] = (double)(ed - stt);*/
+		case 4:
+			//stt = clock();
+			//quickSort(test, 0, n-1, 1);
+			//ed = clock();
+			//table[i][t + 1] = (double)(ed - stt);
 			break;
 		case 5:
 			stt = clock();
-			quickSort(test, 0, n-1, 2);
+			quickSort(test, 0, n, 2);
 			ed = clock();
 			table[i][t + 1] = (double)ed - stt;
 			break;
 		case 6:
 			stt = clock();
-			quickSort(test, 0, n-1, 3);
+			quickSort(test, 0, n, 3);
 			ed = clock();
 			table[i][t + 1] = (double)ed - stt;
 			break;
+		case 7:
+			stt = clock();
+			heapSort(test, n);
+			ed = clock();
+			table[i][t + 1] += (double)ed - stt;
+			break;
+		case 8:
+			stt = clock();
+			qsort(data, n, sizeof(int), compare);
+			ed = clock();
+			table[i][t + 1] += (double)ed - stt;
+			break;
 		}
 	}
+}
+
+int compare(const void *first, const void*second) {
+	if (*(int*)first > *(int*)second)
+		return 1;
+	else if (*(int*)first < *(int*)second)
+		return -1;
+	else return 0;
 }

@@ -9,5 +9,7 @@ void mergeSort(int data[], int p, int r);
 void merge(int data[], int p, int q, int r);
 void quickSort(int data[], int p, int r,int pivot);
 int partition(int data[], int p, int r,int pivot);
+void heapSort(int data[], int n);
+void maxHeapity(int data[], int i, int n);
 
 #endif

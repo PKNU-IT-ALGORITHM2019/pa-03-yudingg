@@ -16,9 +16,9 @@ void swap(int *xxx, int *yyy) {
 double selectionSort(int data[], int n) {
 
 	start = clock();
-	for (int i = n - 1; i > 0; i--) {
+	for (int i = n; i > 1; i--) {
 		int max = i;
-		for (int j = 0; j < i; j++) {
+		for (int j = 1; j < i; j++) {
 			if (max < data[j])
 				max = j;
 		}
@@ -33,8 +33,8 @@ double selectionSort(int data[], int n) {
 double bubbleSort(int data[], int n) {
 
 	start = clock();
-	for (int i = n - 1; i > 0; i--) {
-		for (int j = 0; j < i; j++) {
+	for (int i = n; i > 1; i--) {
+		for (int j = 1; j < i; j++) {
 			if (data[j]>data[j + 1]) {
 				int tmp = data[j + 1];
 				data[j + 1] = data[j];
@@ -49,9 +49,9 @@ double bubbleSort(int data[], int n) {
 double insertionSort(int data[], int n) {
 
 	start = clock();
-	for (int i = 0; i < n; i++) {
+	for (int i = 1; i <= n; i++) {
 		int tmp = data[i];
-		for (int j = i - 1; i >= 0; j--) {
+		for (int j = i - 1; i > 0; j--) {
 			if (data[j] > tmp)
 				data[j + 1] = data[j];
 			else {
@@ -144,4 +144,31 @@ int partition(int data[], int p, int r, int pivot) {
 	}
 	swap(&data[i + 1], &data[r]);
 	return i + 1;
+}
+
+void heapSort(int data[], int n) {
+
+	for (int i = n / 2; i > 0; i--) {	//build_max_heap
+		maxHeapity(data, i, n);
+	}
+	for (int i = n; i > 1; i--) {
+		swap(&data[1], &data[i]);
+		n--;
+		maxHeapity(data, 1, n);
+	}
+
+}
+
+void maxHeapity(int data[], int i, int n) {
+	
+	if (2*i > n)
+		return;
+	int k = 2 * i;
+	if (2 * i + 1 <= n&&data[2 * i + 1] > data[k])
+		k = 2 * i + 1;
+	if (data[i] >= data[k])
+		return;
+	swap(&data[i], &data[k]);
+	maxHeapity(data, k, n);
+
 }
